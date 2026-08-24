@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #0f172a;
+    background-color: #f8fafc;
+  }
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  }
+  .font-serif-quote {
+    font-family: 'Newsreader', Georgia, serif;
+  }
+  .font-cinzel {
+    font-family: 'Cinzel', serif;
+  }
+  .font-cinzel-decorative {
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  }
+  .font-syne {
+    font-family: 'Syne', sans-serif;
+  }
+}
+
+/* =========================================================================
+   GOLDEN PEN LUXURY CURSOR
+   High-definition fountain pen nib with gold metallic gradients & ink tip
+   ========================================================================= */
+
+html, body, * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FFFBEB'/%3E%3Cstop offset='30%25' stop-color='%23FDE047'/%3E%3Cstop offset='65%25' stop-color='%23EAB308'/%3E%3Cstop offset='100%25' stop-color='%23854D0E'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%231E293B'/%3E%3Cstop offset='100%25' stop-color='%230F172A'/%3E%3C/linearGradient%3E%3Cfilter id='s' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='1' dy='1.5' stdDeviation='1' flood-color='%23000000' flood-opacity='0.45'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23s)'%3E%3Cpath d='M14 16 L16 14 L28 26 C29 27 28 29 26 29 C25 29 24 28 23 27 Z' fill='url(%23b)' stroke='%23CA8A04' stroke-width='0.8'/%3E%3Cpath d='M12 14 L14 12 L16 14 L14 16 Z' fill='url(%23g)' stroke='%23854D0E' stroke-width='0.6'/%3E%3Cpath d='M1 1 C3.5 7 7 11 12 14 L14 12 C11 7 7 3.5 1 1 Z' fill='url(%23g)' stroke='%23713F12' stroke-width='0.8' stroke-linejoin='round'/%3E%3Cpath d='M3 3 C5.5 7 8 9.5 11 11.5' fill='none' stroke='%23FEF08A' stroke-width='0.6' stroke-linecap='round'/%3E%3Cline x1='1' y1='1' x2='7.5' y2='7.5' stroke='%23451A03' stroke-width='0.8'/%3E%3Ccircle cx='7.5' cy='7.5' r='1.1' fill='%23451A03'/%3E%3Ccircle cx='1.2' cy='1.2' r='1.2' fill='%23FFFFFF'/%3E%3C/g%3E%3C/svg%3E") 1 1, auto;
+}
+
+/* Interactive elements: Hovering Golden Pen with Glow & Sparkle */
+a, button, [role="button"], input, select, textarea, .cursor-pointer, label[for] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='gh' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FFFFFF'/%3E%3Cstop offset='25%25' stop-color='%23FEF08A'/%3E%3Cstop offset='60%25' stop-color='%23F59E0B'/%3E%3Cstop offset='100%25' stop-color='%2392400E'/%3E%3C/linearGradient%3E%3ClinearGradient id='bh' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%231D4ED8'/%3E%3Cstop offset='100%25' stop-color='%230F172A'/%3E%3C/linearGradient%3E%3Cfilter id='gl' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeDropShadow dx='0' dy='0' stdDeviation='1.5' flood-color='%23F59E0B' flood-opacity='0.9'/%3E%3CfeDropShadow dx='1' dy='1.5' stdDeviation='1' flood-color='%23000000' flood-opacity='0.4'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23gl)'%3E%3Cpath d='M14 16 L16 14 L28 26 C29 27 28 29 26 29 C25 29 24 28 23 27 Z' fill='url(%23bh)' stroke='%23FDE047' stroke-width='0.8'/%3E%3Cpath d='M12 14 L14 12 L16 14 L14 16 Z' fill='url(%23gh)' stroke='%2392400E' stroke-width='0.6'/%3E%3Cpath d='M1 1 C3.5 7 7 11 12 14 L14 12 C11 7 7 3.5 1 1 Z' fill='url(%23gh)' stroke='%2378350F' stroke-width='0.9' stroke-linejoin='round'/%3E%3Cpath d='M3 3 C5.5 7 8 9.5 11 11.5' fill='none' stroke='%23FFFFFF' stroke-width='0.7' stroke-linecap='round'/%3E%3Cline x1='1' y1='1' x2='7.5' y2='7.5' stroke='%23451A03' stroke-width='0.8'/%3E%3Ccircle cx='7.5' cy='7.5' r='1.1' fill='%23451A03'/%3E%3Cpolygon points='1,-1.5 1.8,0.2 3.5,1 1.8,1.8 1,3.5 0.2,1.8 -1.5,1 0.2,0.2' fill='%23FFFFFF'/%3E%3Ccircle cx='1' cy='1' r='1.4' fill='%23FEF08A'/%3E%3C/g%3E%3C/svg%3E") 1 1, pointer !important;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Polish utility cards */
+.polish-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.polish-card-dark {
+  background-color: #0f172a;
+  color: #ffffff;
+  border: 1px solid #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.blue-gradient-text {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #0284c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes rainbowShift {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.animate-rainbow-shift {
+  animation: rainbowShift 6s linear infinite;
+}
+
