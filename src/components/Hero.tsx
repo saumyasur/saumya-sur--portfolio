@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { ArrowUpRight, Sparkles, Calculator, Cpu, ShieldCheck, CheckCircle2, Award, Zap, FileSpreadsheet, TrendingUp, Camera, Check, MapPin } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ArrowUpRight, Sparkles, Calculator, Cpu, ShieldCheck, CheckCircle2, Award, Zap, FileSpreadsheet, TrendingUp, Camera, Check, MapPin, Upload, Trash2, Clipboard } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/siteData';
 
 interface HeroProps {
@@ -11,10 +11,27 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTaxEstimator }) => {
   const [customPhoto, setCustomPhoto] = useState<string | null>(() => {
     return localStorage.getItem('saumya_custom_profile_photo') || null;
   });
+  const [isDragging, setIsDragging] = useState(false);
+  const [justUploaded, setJustUploaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Default executive portrait matching Saumya Sur's professional look (suit, glasses, tie)
   const defaultPortraitUrl = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=800";
+
+  const savePhoto = (dataUrl: string) => {
+    setCustomPhoto(dataUrl);
+    localStorage.setItem('saumya_custom_profile_photo', dataUrl);
+    window.dispatchEvent(new Event('profile_photo_updated'));
+    setJustUploaded(true);
+    setTimeout(() => setJustUploaded(false), 3500);
+  };
+
+  const removePhoto = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCustomPhoto(null);
+    localStorage.removeItem('saumya_custom_profile_photo');
+    window.dispatchEvent(new Event('profile_photo_updated'));
+  };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -22,12 +39,64 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTaxEstimator }) => {
       const reader = new FileReader();
       reader.onload = (event) => {
         const result = event.target?.result as string;
-        setCustomPhoto(result);
-        localStorage.setItem('saumya_custom_profile_photo', result);
+        savePhoto(result);
       };
       reader.readAsDataURL(file);
     }
   };
+
+  // Drag & drop support
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        savePhoto(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Clipboard paste support (Ctrl+V / Cmd+V)
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.startsWith('image/')) {
+          const file = items[i].getAsFile();
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const result = event.target?.result as string;
+              savePhoto(result);
+            };
+            reader.readAsDataURL(file);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, []);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -137,8 +206,16 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTaxEstimator }) => {
             {/* Saumya Sur Executive Full Portrait Card on the Right Side */}
             <div className="bg-white border border-slate-200 rounded-sm p-3 sm:p-4 shadow-sm space-y-3">
               
-              {/* Image Frame Container - Full Aspect & Height */}
-              <div className="relative rounded-sm overflow-hidden bg-slate-900 border border-slate-200 group w-full">
+              {/* Image Frame Container - Full Aspect & Height with Drag & Drop */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`relative rounded-sm overflow-hidden bg-slate-900 border transition-all duration-300 group w-full cursor-pointer ${
+                  isDragging ? 'border-amber-400 ring-4 ring-amber-400/30 scale-[1.01]' : 'border-slate-200 hover:border-blue-400'
+                }`}
+              >
                 <img
                   src={customPhoto || defaultPortraitUrl}
                   alt="Saumya Sur - Accountant & Tax Consultant with AI"
@@ -147,14 +224,31 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTaxEstimator }) => {
                   id="hero-saumya-portrait"
                 />
 
+                {/* Dragging Active Overlay */}
+                {isDragging && (
+                  <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xs flex flex-col items-center justify-center text-white z-30 p-6 text-center">
+                    <Upload className="w-12 h-12 text-amber-400 mb-3 animate-bounce" />
+                    <div className="text-base font-bold uppercase tracking-wider">Drop Your Photo Here</div>
+                    <p className="text-xs text-slate-300 mt-1">Release to set as Saumya Sur portrait</p>
+                  </div>
+                )}
+
+                {/* Just Uploaded Success Badge */}
+                {justUploaded && (
+                  <div className="absolute top-14 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-2 rounded-sm text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-2 z-20 animate-fade-in">
+                    <Check className="w-4 h-4" />
+                    <span>Photo Updated Successfully!</span>
+                  </div>
+                )}
+
                 {/* Top Status Overlay Badge */}
-                <div className="absolute top-3.5 left-3.5 bg-slate-900/85 backdrop-blur-xs text-white px-3 py-1.5 rounded-sm text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 border border-white/10 shadow-xs">
+                <div className="absolute top-3.5 left-3.5 bg-slate-900/85 backdrop-blur-xs text-white px-3 py-1.5 rounded-sm text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 border border-white/10 shadow-xs z-10">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span>Verified Tax Practice</span>
                 </div>
 
-                {/* Upload / Replace Photo Button */}
-                <div className="absolute top-3.5 right-3.5">
+                {/* Top Right Controls */}
+                <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 z-10" onClick={(e) => e.stopPropagation()}>
                   <input
                     type="file"
                     ref={fileInputRef}
@@ -166,15 +260,50 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTaxEstimator }) => {
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     title="Upload / Change Photo"
-                    className="p-2 rounded-sm bg-slate-900/85 hover:bg-slate-900 text-white backdrop-blur-xs text-xs flex items-center gap-1.5 cursor-pointer transition-all border border-white/10 shadow-xs"
+                    className="px-2.5 py-1.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white shadow-md text-xs flex items-center gap-1.5 cursor-pointer transition-all border border-blue-400"
                   >
                     <Camera className="w-3.5 h-3.5" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:inline">Upload Photo</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider">
+                      {customPhoto ? 'Change Photo' : 'Upload Photo'}
+                    </span>
                   </button>
+
+                  {customPhoto && (
+                    <button
+                      onClick={removePhoto}
+                      title="Reset to default"
+                      className="p-1.5 rounded-sm bg-slate-900/80 hover:bg-rose-600 text-slate-200 hover:text-white backdrop-blur-xs text-xs cursor-pointer transition-all border border-white/10"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
 
+                {/* Prompt hint banner if no custom photo uploaded yet */}
+                {!customPhoto && (
+                  <div className="absolute top-14 inset-x-3.5 bg-slate-950/85 backdrop-blur-xs border border-amber-400/40 rounded-sm p-3 text-white z-10 shadow-md">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 text-xs">
+                        <Upload className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                        <span className="font-semibold text-[11px] text-amber-200">
+                          আপনার ছবি সেট করুন (Select Screenshot file or Drag & Drop)
+                        </span>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          fileInputRef.current?.click();
+                        }}
+                        className="px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-[10px] uppercase tracking-wider rounded-xs flex-shrink-0 shadow-xs cursor-pointer"
+                      >
+                        Choose File
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Bottom Overlay Gradient & Full Caption */}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent p-5 text-white">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent p-5 text-white z-10">
                   <div className="flex items-end justify-between gap-2">
                     <div>
                       <div className="text-xl font-bold font-heading uppercase tracking-tight text-white flex items-center gap-2">

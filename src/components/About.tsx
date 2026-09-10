@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, CheckCircle2, User, Award, BookOpen, Sparkles, MapPin, Mail, X, FileText, ChevronRight } from 'lucide-react';
 import { PERSONAL_INFO, ABOUT_DETAILS } from '../data/siteData';
 import { GlowCard } from './GlowCard';
@@ -6,6 +6,17 @@ import { MonogramBadge } from './MonogramBadge';
 
 export const About: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(() => {
+    return localStorage.getItem('saumya_custom_profile_photo') || null;
+  });
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setProfilePhoto(localStorage.getItem('saumya_custom_profile_photo') || null);
+    };
+    window.addEventListener('profile_photo_updated', handleUpdate);
+    return () => window.removeEventListener('profile_photo_updated', handleUpdate);
+  }, []);
 
   return (
     <section id="about" className="py-16 sm:py-24 bg-[#f8fafc] border-b border-slate-200 relative overflow-hidden">
@@ -21,7 +32,7 @@ export const About: React.FC = () => {
               <div className="flex items-center gap-4 pb-6 border-b border-slate-100">
                 <div className="relative w-16 h-16 rounded-sm overflow-hidden bg-slate-900 border-2 border-blue-600 shadow-sm flex-shrink-0">
                   <img
-                    src={localStorage.getItem('saumya_custom_profile_photo') || "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400"}
+                    src={profilePhoto || "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400"}
                     alt="Saumya Sur"
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover object-top"
